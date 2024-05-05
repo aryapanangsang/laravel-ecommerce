@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Redirect;
 
@@ -27,13 +28,32 @@ class OrderController extends Controller
 
         // Checkout Error Order_id Dosen Have default Value
         foreach($carts as $cart){
+            $product = Product::find($cart->product_id);
+            $product->update([
+                'stock' => $product->stock - $cart->amount
+            ]);
+
             Transaction::create([
                 'amount' => $cart->amount,
                 'order_id' => $order->id,
                 'product_id' => $cart->product_id
             ]);
+
+            $cart->delete();
         }
 
+
         return Redirect::back();
+    }
+
+    public function index_order()
+    {
+        $orders = Order::all();
+        return view('index_order', compact('orders'));
+    }
+
+    public function show_order(Order $order)
+    {
+        return view('show_order', compact('order'));
     }
 }

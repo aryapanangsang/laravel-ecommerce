@@ -39,3 +39,5 @@ Route::patch('/cart/{cart}' , [CartController::class, 'update_cart'])->name('upd
 Route::delete('/cart/{cart}', [CartController::class, 'delete_cart'])->name('delete_cart');
 
 Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+Route::get('/order', [OrderController::class, 'index_order'])->name('index_order');
+Route::get('/order/{order}', [OrderController::class, 'show_order'])->name('show_order');
